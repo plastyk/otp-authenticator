@@ -63,7 +63,7 @@ class OTPExtension extends Extension
         $method = MethodRegistry::singleton()->getMethodByURLSegment($methodSegment);
 
         if (!$method instanceof Method) {
-            return throw new OTPException(_t(
+            throw new OTPException(_t(
                 Method::class . '.INVALID_METHOD',
                 'This endpoint should only be used by the OTP method',
             ));
@@ -73,13 +73,13 @@ class OTPExtension extends Extension
         $fieldLabel = $sendProvider->getFieldLabel();
 
         if (!$to) {
-            return new OTPException(_t(Method::class . '.NO_TO', 'No {fieldLabel} provided', null, [
+            throw new OTPException(_t(Method::class . '.NO_TO', 'No {fieldLabel} provided', null, [
                 'fieldLabel' => $fieldLabel,
             ]));
         }
 
         if (!$sendProvider->validate($to, $additional)) {
-            return new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
+            throw new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
                 'fieldLabel' => $fieldLabel,
             ]));
         }
@@ -94,7 +94,7 @@ class OTPExtension extends Extension
         try {
             $sendProvider->send($totpCode, $to);
         } catch (Exception $ex) {
-            return new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
+            throw new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
                 'fieldLabel' => $fieldLabel,
             ]));
         }
@@ -110,7 +110,7 @@ class OTPExtension extends Extension
         $method = MethodRegistry::singleton()->getMethodByURLSegment($methodSegment);
 
         if (!$method instanceof Method) {
-            return new OTPException(_t(
+            throw new OTPException(_t(
                 Method::class . '.INVALID_METHOD',
                 'This endpoint should only be used by the OTP method',
             ));
@@ -120,7 +120,7 @@ class OTPExtension extends Extension
         $fieldLabel = $sendProvider->getFieldLabel();
 
         if (!$member || !($to = $member->getOTPSendTo())) {
-            return new OTPException(_t(
+            throw new OTPException(_t(
                 Method::class . '.NO_MEMBER',
                 "We couldn't find a {fieldLabel} in your account",
                 null,
@@ -136,7 +136,7 @@ class OTPExtension extends Extension
         try {
             $sent = $sendProvider->send($code, $to);
         } catch (Exception $ex) {
-            return new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
+            throw new OTPException(_t(Method::class . '.INVALID_TO', 'No valid {fieldLabel} provided', null, [
                 'fieldLabel' => $fieldLabel,
             ]), 0, $ex);
         }
